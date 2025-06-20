@@ -18,11 +18,11 @@ class SOARM100Env(gym.Env):
         self.model = mujoco.MjModel.from_xml_path(
             "mujoco_menagerie/trs_so_arm100/scene.xml"
         )
-        self.data = mujoco.MjData(self.model)  # Initialize _data here as well
+        self.data = mujoco.MjData(self.model)  # Initialize data here as well
         self.action_space = gym.spaces.Discrete(6)
         # Define a more appropriate observation space based on the model's qpos
         self.observation_space = gym.spaces.Box(
-            low=-np.inf, high=np.inf, shape=self._data.qpos.shape, dtype=np.float64
+            low=-np.inf, high=np.inf, shape=self.data.qpos.shape, dtype=np.float64
         )
         self.metadata = {"render_modes": ["rgb_array"], "render_fps": 30}
         self.render_mode = render_mode
@@ -38,27 +38,27 @@ class SOARM100Env(gym.Env):
         super().reset(seed=seed)
 
         # Reset the data to initial state
-        mujoco.mj_resetData(self.model, self._data)
-        mujoco.mj_forward(self.model, self._data)
+        mujoco.mj_resetData(self.model, self.data)
+        mujoco.mj_forward(self.model, self.data)
 
         return self._get_obs(), self._get_info()
 
     def step(self, action):
-        self._data.ctrl = action
-        mujoco.mj_step(self.model, self._data)
+        self.data.ctrl = action
+        mujoco.mj_step(self.model, self.data)
 
         return self._get_obs(), 0, False, False, self._get_info()
 
     def render(self):
         if self.render_mode == "rgb_array":
-            self._renderer.update_scene(self._data)
+            self._renderer.update_scene(self.data)
 
             return self._renderer.render()
         else:
             return None
 
     def _get_obs(self):
-        return self._data.qpos
+        return self.data.qpos
 
     def _get_info(self):
-        return {"state": self._data.qpos}
+        return {"state": self.data.qpos}
