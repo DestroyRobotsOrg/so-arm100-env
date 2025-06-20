@@ -15,10 +15,10 @@ class SOARM100Env(gym.Env):
                 "https://github.com/google-deepmind/mujoco_menagerie.git"
             ], check=True)
         
-        self._model = mujoco.MjModel.from_xml_path(
+        self.model = mujoco.MjModel.from_xml_path(
             "mujoco_menagerie/trs_so_arm100/scene.xml"
         )
-        self._data = mujoco.MjData(self._model)  # Initialize _data here as well
+        self.data = mujoco.MjData(self.model)  # Initialize _data here as well
         self.action_space = gym.spaces.Discrete(6)
         # Define a more appropriate observation space based on the model's qpos
         self.observation_space = gym.spaces.Box(
@@ -31,21 +31,21 @@ class SOARM100Env(gym.Env):
             self._render_width = 640
             self._render_height = 480
             self._renderer = mujoco.Renderer(
-                self._model
+                self.model
             )  # , self._render_width, self._render_height)
 
     def reset(self, seed: Optional[int] = None, options: Optional[dict] = None):
         super().reset(seed=seed)
 
         # Reset the data to initial state
-        mujoco.mj_resetData(self._model, self._data)
-        mujoco.mj_forward(self._model, self._data)
+        mujoco.mj_resetData(self.model, self._data)
+        mujoco.mj_forward(self.model, self._data)
 
         return self._get_obs(), self._get_info()
 
     def step(self, action):
         self._data.ctrl = action
-        mujoco.mj_step(self._model, self._data)
+        mujoco.mj_step(self.model, self._data)
 
         return self._get_obs(), 0, False, False, self._get_info()
 
