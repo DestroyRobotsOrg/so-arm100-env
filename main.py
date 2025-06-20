@@ -1,5 +1,5 @@
 import gymnasium as gym
-from gantry import Environment
+from gantry import Environment, render_sphere
 import example
 
 render_sphere([0, 0, 0], 0.2)
