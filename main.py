@@ -2,6 +2,7 @@ import gymnasium as gym
 from gantry import Environment
 import example
 
-env = Environment(gym.make("so-arm100"))
+gym_env = gym.make("so-arm100")
+env = Environment(gym_env)
 env.render()
 
