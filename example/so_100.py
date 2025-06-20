@@ -2,10 +2,19 @@ from typing import Optional
 import numpy as np
 import mujoco
 import gymnasium as gym
+import subprocess
+import os
 
 
 class SOARM100Env(gym.Env):
     def __init__(self, render_mode=None):
+        # Clone mujoco_menagerie repo if it doesn't exist
+        if not os.path.exists("mujoco_menagerie"):
+            subprocess.run([
+                "git", "clone", "--depth", "1", 
+                "https://github.com/google-deepmind/mujoco_menagerie.git"
+            ], check=True)
+        
         self._model = mujoco.MjModel.from_xml_path(
             "mujoco_menagerie/trs_so_arm100/scene.xml"
         )
