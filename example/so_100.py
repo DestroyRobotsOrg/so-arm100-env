@@ -8,15 +8,8 @@ import os
 
 class SOARM100Env(gym.Env):
     def __init__(self, render_mode=None):
-        # Clone mujoco_menagerie repo if it doesn't exist
-        if not os.path.exists("mujoco_menagerie"):
-            subprocess.run([
-                "git", "clone", "--depth", "1", 
-                "https://github.com/google-deepmind/mujoco_menagerie.git"
-            ], check=True)
-        
         self.model = mujoco.MjModel.from_xml_path(
-            "mujoco_menagerie/trs_so_arm100/scene.xml"
+            "trs_so_arm100/scene.xml"
         )
         self.data = mujoco.MjData(self.model)  # Initialize data here as well
         self.action_space = gym.spaces.Discrete(6)
