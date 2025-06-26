@@ -4,5 +4,6 @@ import example
 
 gym_env = gym.make("so-arm100")
 env = Environment(gym_env)
+env.reset(seed=42)
 env.render()
 
